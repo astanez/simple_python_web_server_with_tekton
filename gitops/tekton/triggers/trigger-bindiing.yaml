@@ -1,0 +1,27 @@
+apiVersion: triggers.tekton.dev/v1alpha1
+kind: TriggerBinding
+metadata:
+  creationTimestamp: '2023-11-02T14:35:10Z'
+  generation: 1
+  managedFields:
+    - apiVersion: triggers.tekton.dev/v1alpha1
+      fieldsType: FieldsV1
+      fieldsV1:
+        'f:spec':
+          .: {}
+          'f:params': {}
+      manager: Mozilla
+      operation: Update
+      time: '2023-11-02T14:35:10Z'
+  name: python-web-server
+  namespace: python-web-server
+  resourceVersion: '154971'
+  uid: 0f6ba1b0-086c-492a-8609-16a07e1008e4
+spec:
+  params:
+    - name: git-repo-url
+      value: $(body.repository.url)
+    - name: git-repo-name
+      value: $(body.repository.name)
+    - name: git-revision
+      value: $(body.head_commit.id)

@@ -1,0 +1,33 @@
+apiVersion: tekton.dev/v1beta1
+kind: PipelineRun
+metadata:
+  generateName: build-deploy-simple-python-web-server-
+  namespace: python-web-server
+spec:
+  params:
+    - name: deployment-namex
+      value: python-web-server
+    - name: git-url
+      value: 'https://github.com/astanez/simple_python_web_server'
+    - name: git-revision
+      value: main
+    - name: IMAGE
+      value: >-
+        image-registry.openshift-image-registry.svc:5000/python-web-server/simple-python-web-server
+  pipelineRef:
+    name: build-and-deploy
+  serviceAccountName: pipeline
+  timeouts:
+    pipeline: 1h0m0s
+  workspaces:
+    - name: shared-workspace
+      volumeClaimTemplate:
+        metadata:
+          creationTimestamp: null
+        spec:
+          accessModes:
+            - ReadWriteOnce
+          resources:
+            requests:
+              storage: 500Mi
+        status: {}

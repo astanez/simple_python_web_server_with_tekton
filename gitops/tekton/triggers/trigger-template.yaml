@@ -1,0 +1,64 @@
+apiVersion: triggers.tekton.dev/v1alpha1
+kind: TriggerTemplate
+metadata:
+  creationTimestamp: '2023-11-02T14:24:08Z'
+  generation: 5
+  managedFields:
+    - apiVersion: triggers.tekton.dev/v1beta1
+      fieldsType: FieldsV1
+      fieldsV1:
+        'f:spec':
+          .: {}
+          'f:params': {}
+      manager: Mozilla
+      operation: Update
+      time: '2023-11-02T14:24:08Z'
+    - apiVersion: triggers.tekton.dev/v1alpha1
+      fieldsType: FieldsV1
+      fieldsV1:
+        'f:spec':
+          'f:resourcetemplates': {}
+      manager: Mozilla
+      operation: Update
+      time: '2023-11-02T16:32:56Z'
+  name: python-web-server
+  namespace: python-web-server
+  resourceVersion: '244679'
+  uid: 1bb61ecb-92ef-4992-9cc0-96749427cd6e
+spec:
+  params:
+    - description: The git repository url
+      name: git-repo-url
+    - default: master
+      description: The git revision
+      name: git-revision
+    - description: The name of the deployment to be created / patched
+      name: git-repo-name
+  resourcetemplates:
+    - apiVersion: tekton.dev/v1beta1
+      kind: PipelineRun
+      metadata:
+        generateName: build-deploy-simple-python-web-server-
+      spec:
+        params:
+          - name: deployment-namex
+            value: python-web-server
+          - name: git-url
+            value: 'https://github.com/astanez/simple_python_web_server'
+          - name: git-revision
+            value: main
+          - name: IMAGE
+            value: >-
+              image-registry.openshift-image-registry.svc:5000/python-web-server/simple-python-web-server
+        pipelineRef:
+          name: build-and-deploy
+        serviceAccountName: pipeline
+        workspaces:
+          - name: shared-workspace
+            volumeClaimTemplate:
+              spec:
+                accessModes:
+                  - ReadWriteOnce
+                resources:
+                  requests:
+                    storage: 500Mi
